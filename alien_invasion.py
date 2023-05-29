@@ -4,6 +4,7 @@ import pygame
 
 from settings import Settings
 from ship import Ship
+import game_function as game_func
 
 
 def run_game():
@@ -17,15 +18,9 @@ def run_game():
     # Запуск основного цикла игры
     while True:
         # Отслеживание клавиатуры и мышки
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                sys.exit()
+        game_func.check_events()
         # Перерисовываем экран в другой цвет
-        screen.fill(al_inv.bg_color)
-        # Показывает корабль
-        ship.shipdraw()
-        # Показывает последний прорисованный экран
-        pygame.display.flip()
+        game_func.update_screen(al_inv, screen, ship)
 
 
 run_game()
