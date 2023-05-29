@@ -8,6 +8,7 @@ def run_game():
     pygame.init()
     screen = pygame.display.set_mode((1200, 900))
     pygame.display.set_caption('Alien Invasion')
+    bg_color = (50, 50, 255)
 
     # Запуск основного цикла игры
     while True:
@@ -15,6 +16,8 @@ def run_game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
+        # Перерисовываем экран в другой цвет
+        screen.fill(bg_color)
         # Показывает последний прорисованный экран
         pygame.display.flip()
 
