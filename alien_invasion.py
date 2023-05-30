@@ -22,12 +22,7 @@ def run_game():
         # Отслеживание клавиатуры и мышки
         game_func.check_events(al_inv, screen, ship, bullets)
         ship.update()
-        bullets.update()
-        #Удаление пуль
-        for bullet in bullets.copy():
-            if bullet.rect.bottom <= 0:
-                bullets.remove(bullet)
-            #print(len(bullets))
+        game_func.update_bullets(bullets)
         # Перерисовываем экран в другой цвет
         game_func.update_screen(al_inv, screen, ship, bullets)
 

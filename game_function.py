@@ -17,8 +17,7 @@ def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
         ship.moving_down = True
     elif event.key == pygame.K_SPACE:
         # Создание пули
-        new_bullet = Bullet(al_inv_settings, screen, ship)
-        bullets.add(new_bullet)
+        fire_bullets(al_inv_settings,screen,ship,bullets)
 
 
 def check_keyup_events(event, ship):
@@ -53,3 +52,17 @@ def update_screen(al_inv_settings, screen, ship, bullets):
     ship.shipdraw()
     # Показывает последний прорисованный экран
     pygame.display.flip()
+
+def fire_bullets(al_inv_settings,screen,ship,bullets):
+    new_bullet = Bullet(al_inv_settings, screen, ship)
+    bullets.add(new_bullet)
+
+
+def update_bullets(bullets):
+    bullets.update()
+    # Удаление пуль
+    for bullet in bullets.copy():
+        if bullet.rect.bottom <= 0:
+            bullets.remove(bullet)
+        # print(len(bullets))
+
