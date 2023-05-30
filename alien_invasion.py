@@ -13,12 +13,13 @@ def run_game():
     al_inv = Settings()
     screen = pygame.display.set_mode((al_inv.screen_width, al_inv.screen_height))
     pygame.display.set_caption('Alien Invasion')
-    ship = Ship(screen)
+    ship = Ship(al_inv, screen)
 
     # Запуск основного цикла игры
     while True:
         # Отслеживание клавиатуры и мышки
-        game_func.check_events()
+        game_func.check_events(ship)
+        ship.update()
         # Перерисовываем экран в другой цвет
         game_func.update_screen(al_inv, screen, ship)
 
