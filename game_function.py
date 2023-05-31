@@ -18,6 +18,8 @@ def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
     elif event.key == pygame.K_SPACE:
         # Создание пули
         fire_bullets(al_inv_settings,screen,ship,bullets)
+    elif event.key == pygame.K_q:
+        sys.exit()
 
 
 def check_keyup_events(event, ship):
@@ -43,13 +45,14 @@ def check_events(al_inv_settings, screen, ship, bullets):
             check_keyup_events(event, ship)
 
 
-def update_screen(al_inv_settings, screen, ship, bullets):
+def update_screen(al_inv_settings, screen, ship,alien, bullets):
     """Обновление изображения и его отображение"""
     # Перерисовываем экран в другой цвет
     screen.fill(al_inv_settings.bg_color)
     for bullet in bullets.sprites():
         bullet.draw_a_bullet()
     ship.shipdraw()
+    alien.aline_draw()
     # Показывает последний прорисованный экран
     pygame.display.flip()
 

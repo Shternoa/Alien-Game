@@ -6,6 +6,7 @@ from settings import Settings
 from ship import Ship
 import game_function as game_func
 from pygame.sprite import Group
+from alien import Alien
 
 
 def run_game():
@@ -16,6 +17,7 @@ def run_game():
     pygame.display.set_caption('Alien Invasion')
     ship = Ship(al_inv, screen)
     bullets = Group()
+    alien = Alien(al_inv, screen)
 
     # Запуск основного цикла игры
     while True:
@@ -24,7 +26,7 @@ def run_game():
         ship.update()
         game_func.update_bullets(bullets)
         # Перерисовываем экран в другой цвет
-        game_func.update_screen(al_inv, screen, ship, bullets)
+        game_func.update_screen(al_inv, screen, ship,alien, bullets)
 
 
 run_game()
