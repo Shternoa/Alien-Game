@@ -3,6 +3,7 @@ import sys
 import pygame
 
 from bullet import Bullet
+from alien import Alien
 
 
 def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
@@ -17,7 +18,7 @@ def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
         ship.moving_down = True
     elif event.key == pygame.K_SPACE:
         # Создание пули
-        fire_bullets(al_inv_settings,screen,ship,bullets)
+        fire_bullets(al_inv_settings, screen, ship, bullets)
     elif event.key == pygame.K_q:
         sys.exit()
 
@@ -45,18 +46,20 @@ def check_events(al_inv_settings, screen, ship, bullets):
             check_keyup_events(event, ship)
 
 
-def update_screen(al_inv_settings, screen, ship,alien, bullets):
+def update_screen(al_inv_settings, screen, ship, aliens, bullets):
     """Обновление изображения и его отображение"""
     # Перерисовываем экран в другой цвет
     screen.fill(al_inv_settings.bg_color)
     for bullet in bullets.sprites():
         bullet.draw_a_bullet()
     ship.shipdraw()
-    alien.aline_draw()
+    for alien in aliens.sprites():
+        alien.aline_draw()
     # Показывает последний прорисованный экран
     pygame.display.flip()
 
-def fire_bullets(al_inv_settings,screen,ship,bullets):
+
+def fire_bullets(al_inv_settings, screen, ship, bullets):
     new_bullet = Bullet(al_inv_settings, screen, ship)
     bullets.add(new_bullet)
 
@@ -69,3 +72,20 @@ def update_bullets(bullets):
             bullets.remove(bullet)
         # print(len(bullets))
 
+
+#def get_number_of_aliens_x(al_inv_settings, alien_width):
+
+
+def create_fleet(al_inv_settings, screen, aliens):
+    """Флот из пришельцев"""
+    alien = Alien(al_inv_settings, screen)
+    alien_width = alien.rect.width
+    available_screen_space_x = al_inv_settings.screen_width - 2 * alien_width
+    number_aliens_x = int(available_screen_space_x / (2 * alien_width))
+
+    # Первый ряд пришельцев
+    for alien_number in range(number_aliens_x):
+        alien = Alien(al_inv_settings, screen)
+        alien.x = alien_width + 2 * alien_width * alien_number
+        alien.rect.x = alien.x
+        aliens.add(alien)
