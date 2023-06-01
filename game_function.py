@@ -73,19 +73,25 @@ def update_bullets(bullets):
         # print(len(bullets))
 
 
-#def get_number_of_aliens_x(al_inv_settings, alien_width):
+def get_number_of_aliens_x(al_inv_settings, alien_width):
+    """Колво пришельцев в ряду"""
+    available_screen_space_x = al_inv_settings.screen_width - 2 * alien_width
+    number_aliens_x = int(available_screen_space_x / (2 * alien_width))
+    return number_aliens_x
+
+
+def creat_alien(al_inv_settings, screen, aliens, alien_number):
+    alien = Alien(al_inv_settings, screen)
+    alien_width = alien.rect.width
+    alien.x = alien_width + 2 * alien_width * alien_number
+    alien.rect.x = alien.x
+    aliens.add(alien)
 
 
 def create_fleet(al_inv_settings, screen, aliens):
     """Флот из пришельцев"""
     alien = Alien(al_inv_settings, screen)
-    alien_width = alien.rect.width
-    available_screen_space_x = al_inv_settings.screen_width - 2 * alien_width
-    number_aliens_x = int(available_screen_space_x / (2 * alien_width))
-
-    # Первый ряд пришельцев
+    number_aliens_x = get_number_of_aliens_x(al_inv_settings, alien.rect.width)
     for alien_number in range(number_aliens_x):
-        alien = Alien(al_inv_settings, screen)
-        alien.x = alien_width + 2 * alien_width * alien_number
-        alien.rect.x = alien.x
-        aliens.add(alien)
+        creat_alien(al_inv_settings, screen, aliens, alien_number)
+
