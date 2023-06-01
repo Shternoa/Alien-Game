@@ -64,13 +64,17 @@ def fire_bullets(al_inv_settings, screen, ship, bullets):
     bullets.add(new_bullet)
 
 
-def update_bullets(bullets):
+def update_bullets(al_inv_setting, screen, ship, aliens, bullets):
     bullets.update()
     # Удаление пуль
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
         # print(len(bullets))
+    collision = pygame.sprite.groupcollide(bullets, aliens, False, True)
+    if len(aliens) == 0:
+        bullets.empty()
+        create_fleet(al_inv_setting, screen, ship, aliens)
 
 
 def get_number_of_rows(al_inv_settings, ship_height, alien_height):
@@ -113,15 +117,16 @@ def check_fleet_edges(al_inv_settings, aliens):
             change_fleet_direction(al_inv_settings, aliens)
             break
 
-def change_fleet_direction(al_inv_settings,aliens):
+
+def change_fleet_direction(al_inv_settings, aliens):
     """Флот опускается и меняет направление"""
     for alien in aliens.sprites():
         alien.rect.y += al_inv_settings.fleet_drop_speed
         al_inv_settings.fleet_direction *= -1
 
 
-def update_aliens(al_inv_settings,aliens):
+def update_aliens(al_inv_settings, aliens):
     """Проверка на достижение краев"""
-    check_fleet_edges(al_inv_settings,aliens)
+    check_fleet_edges(al_inv_settings, aliens)
     """Обновление пришельцев"""
     aliens.update()
