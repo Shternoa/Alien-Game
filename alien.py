@@ -21,6 +21,6 @@ class Alien(Sprite):
         # Позиция пришельца
         self.x = float(self.rect.x)
 
-    def aline_draw(self):
+    def alien_draw(self):
         """Вывод пришельца на экран"""
         self.screen.blit(self.image, self.rect)

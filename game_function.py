@@ -54,7 +54,7 @@ def update_screen(al_inv_settings, screen, ship, aliens, bullets):
         bullet.draw_a_bullet()
     ship.shipdraw()
     for alien in aliens.sprites():
-        alien.aline_draw()
+        alien.alien_draw()
     # Показывает последний прорисованный экран
     pygame.display.flip()
 
@@ -73,6 +73,13 @@ def update_bullets(bullets):
         # print(len(bullets))
 
 
+def get_number_of_rows(al_inv_settings, ship_height, alien_height):
+    """Колво рядов помещения"""
+    available_screen_space_y = (al_inv_settings.screen_height - (2 * alien_height) - ship_height)
+    number_of_rows = int(available_screen_space_y / (2 * alien_height))
+    return number_of_rows
+
+
 def get_number_of_aliens_x(al_inv_settings, alien_width):
     """Колво пришельцев в ряду"""
     available_screen_space_x = al_inv_settings.screen_width - 2 * alien_width
@@ -80,18 +87,20 @@ def get_number_of_aliens_x(al_inv_settings, alien_width):
     return number_aliens_x
 
 
-def creat_alien(al_inv_settings, screen, aliens, alien_number):
+def creat_alien(al_inv_settings, screen, aliens, alien_number, row_number):
     alien = Alien(al_inv_settings, screen)
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number
     alien.rect.x = alien.x
+    alien.rect.y = alien.rect.height + 2 * alien.rect.height * row_number
     aliens.add(alien)
 
 
-def create_fleet(al_inv_settings, screen, aliens):
+def create_fleet(al_inv_settings, screen, ship, aliens):
     """Флот из пришельцев"""
     alien = Alien(al_inv_settings, screen)
     number_aliens_x = get_number_of_aliens_x(al_inv_settings, alien.rect.width)
-    for alien_number in range(number_aliens_x):
-        creat_alien(al_inv_settings, screen, aliens, alien_number)
-
+    number_of_rows = get_number_of_rows(al_inv_settings, ship.rect.height, alien.rect.height)
+    for row_number in range(number_of_rows):
+        for alien_number in range(number_aliens_x):
+            creat_alien(al_inv_settings, screen, aliens, alien_number, row_number)
