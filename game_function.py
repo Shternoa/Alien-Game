@@ -104,3 +104,7 @@ def create_fleet(al_inv_settings, screen, ship, aliens):
     for row_number in range(number_of_rows):
         for alien_number in range(number_aliens_x):
             creat_alien(al_inv_settings, screen, aliens, alien_number, row_number)
+
+def update_aliens(aliens):
+    """Обновление пришельцев"""
+    aliens.update()

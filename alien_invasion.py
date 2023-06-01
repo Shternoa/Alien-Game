@@ -26,6 +26,7 @@ def run_game():
         game_func.check_events(al_inv, screen, ship, bullets)
         ship.update()
         game_func.update_bullets(bullets)
+        game_func.update_aliens(aliens)
         # Перерисовываем экран в другой цвет
         game_func.update_screen(al_inv, screen, ship, aliens, bullets)
 
