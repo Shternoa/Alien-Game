@@ -105,6 +105,23 @@ def create_fleet(al_inv_settings, screen, ship, aliens):
         for alien_number in range(number_aliens_x):
             creat_alien(al_inv_settings, screen, aliens, alien_number, row_number)
 
-def update_aliens(aliens):
+
+def check_fleet_edges(al_inv_settings, aliens):
+    """Достижение края"""
+    for alien in aliens.sprites():
+        if alien.check_edges():
+            change_fleet_direction(al_inv_settings, aliens)
+            break
+
+def change_fleet_direction(al_inv_settings,aliens):
+    """Флот опускается и меняет направление"""
+    for alien in aliens.sprites():
+        alien.rect.y += al_inv_settings.fleet_drop_speed
+        al_inv_settings.fleet_direction *= -1
+
+
+def update_aliens(al_inv_settings,aliens):
+    """Проверка на достижение краев"""
+    check_fleet_edges(al_inv_settings,aliens)
     """Обновление пришельцев"""
     aliens.update()
