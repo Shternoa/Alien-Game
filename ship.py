@@ -35,3 +35,7 @@ class Ship():
     def shipdraw(self):
         """Рисует корабль"""
         self.screen.blit(self.image, self.rect)
+
+    def center_ship(self):
+        """Корабль в  центре"""
+        self.center = self.screen_rect.centerx

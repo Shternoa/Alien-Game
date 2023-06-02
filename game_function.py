@@ -4,6 +4,7 @@ import pygame
 
 from bullet import Bullet
 from alien import Alien
+from time import sleep
 
 
 def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
@@ -137,10 +138,26 @@ def change_fleet_direction(al_inv_settings, aliens):
     al_inv_settings.fleet_direction *= -1
 
 
-def update_aliens(ai_settings, ship, aliens):
+def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
+    """Столкновение с короблем"""
+    stats.ship_left -= 1
+
+    # Очистка пришельцев с пулями
+    aliens.empty()
+    bullets.empty()
+
+    # Новый флот
+    create_fleet(ai_settings, screen, ship, aliens)
+    ship.center_ship()
+
+    # Задержка
+    sleep(0.5)
+
+
+def update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets):
     """Обновляет позиции всех пришельцев во флоте."""
-    check_fleet_edges(ai_settings, aliens)
+    check_fleet_edges(al_inv_settings, aliens)
     aliens.update()
     # Проверка коллизий "пришелец-корабль".
-    # if pygame.sprite.spritecollideany(ship, aliens):
-    #     print("Ship hit!!!")
+    if pygame.sprite.spritecollideany(ship, aliens):
+        ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
