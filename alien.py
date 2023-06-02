@@ -22,11 +22,12 @@ class Alien(Sprite):
         self.x = float(self.rect.x)
 
     def check_edges(self):
-        """Возвращает True если пришелец достиг края"""
+        """Возвращает True, если пришелец находится у края экрана."""
         screen_rect = self.screen.get_rect()
+
         if self.rect.right >= screen_rect.right:
             return True
-        elif self.rect.left < 0:
+        elif self.rect.left <= 0:
             return True
 
     def update(self):

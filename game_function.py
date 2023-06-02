@@ -23,6 +23,11 @@ def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
         sys.exit()
 
 
+def fire_bullets(al_inv_settings, screen, ship, bullets):
+    new_bullet = Bullet(al_inv_settings, screen, ship)
+    bullets.add(new_bullet)
+
+
 def check_keyup_events(event, ship):
     """Реакция на прекращения нажатия"""
     if event.key == pygame.K_RIGHT:
@@ -53,35 +58,29 @@ def update_screen(al_inv_settings, screen, ship, aliens, bullets):
     for bullet in bullets.sprites():
         bullet.draw_a_bullet()
     ship.shipdraw()
-    for alien in aliens.sprites():
-        alien.alien_draw()
+    aliens.draw(screen)
     # Показывает последний прорисованный экран
     pygame.display.flip()
 
 
-def fire_bullets(al_inv_settings, screen, ship, bullets):
-    new_bullet = Bullet(al_inv_settings, screen, ship)
-    bullets.add(new_bullet)
-
-
 def update_bullets(al_inv_setting, screen, ship, aliens, bullets):
     bullets.update()
-    # Удаление пуль
+    # Удаление пуль, вышедших за край экрана.
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-        # print(len(bullets))
-    collision = pygame.sprite.groupcollide(bullets, aliens, False, True)
+    check_bullet_alien_collisions(al_inv_setting, screen, ship, aliens, bullets)
+
+
+def check_bullet_alien_collisions(al_inv_setting, screen, ship, aliens, bullets):
+    """Обработка коллизий пуль с пришельцами."""
+    # Удаление пуль и пришельцев, участвующих в коллизиях.
+
+    collisions = pygame.sprite.groupcollide(bullets, aliens, False, True)
     if len(aliens) == 0:
+        # Уничтожение существующих пуль и создание нового флота.
         bullets.empty()
         create_fleet(al_inv_setting, screen, ship, aliens)
-
-
-def get_number_of_rows(al_inv_settings, ship_height, alien_height):
-    """Колво рядов помещения"""
-    available_screen_space_y = (al_inv_settings.screen_height - (2 * alien_height) - ship_height)
-    number_of_rows = int(available_screen_space_y / (2 * alien_height))
-    return number_of_rows
 
 
 def get_number_of_aliens_x(al_inv_settings, alien_width):
@@ -91,7 +90,7 @@ def get_number_of_aliens_x(al_inv_settings, alien_width):
     return number_aliens_x
 
 
-def creat_alien(al_inv_settings, screen, aliens, alien_number, row_number):
+def create_alien(al_inv_settings, screen, aliens, alien_number, row_number):
     alien = Alien(al_inv_settings, screen)
     alien_width = alien.rect.width
     alien.x = alien_width + 2 * alien_width * alien_number
@@ -102,12 +101,25 @@ def creat_alien(al_inv_settings, screen, aliens, alien_number, row_number):
 
 def create_fleet(al_inv_settings, screen, ship, aliens):
     """Флот из пришельцев"""
+    """Создает флот пришельцев."""
+
+    # Создание пришельца и вычисление количества пришельцев в ряду.
     alien = Alien(al_inv_settings, screen)
     number_aliens_x = get_number_of_aliens_x(al_inv_settings, alien.rect.width)
-    number_of_rows = get_number_of_rows(al_inv_settings, ship.rect.height, alien.rect.height)
-    for row_number in range(number_of_rows):
+    number_rows = get_number_of_rows(al_inv_settings, ship.rect.height, alien.rect.height)
+
+    # Создание флота пришельцев.
+    for row_number in range(number_rows):
         for alien_number in range(number_aliens_x):
-            creat_alien(al_inv_settings, screen, aliens, alien_number, row_number)
+            create_alien(al_inv_settings, screen, aliens, alien_number,
+                         row_number)
+
+
+def get_number_of_rows(al_inv_settings, ship_height, alien_height):
+    """Колво рядов помещения"""
+    available_screen_space_y = (al_inv_settings.screen_height - (2 * alien_height) - ship_height)
+    number_of_rows = int(available_screen_space_y / (2 * alien_height))
+    return number_of_rows
 
 
 def check_fleet_edges(al_inv_settings, aliens):
@@ -122,11 +134,13 @@ def change_fleet_direction(al_inv_settings, aliens):
     """Флот опускается и меняет направление"""
     for alien in aliens.sprites():
         alien.rect.y += al_inv_settings.fleet_drop_speed
-        al_inv_settings.fleet_direction *= -1
+    al_inv_settings.fleet_direction *= -1
 
 
-def update_aliens(al_inv_settings, aliens):
-    """Проверка на достижение краев"""
-    check_fleet_edges(al_inv_settings, aliens)
-    """Обновление пришельцев"""
+def update_aliens(ai_settings, ship, aliens):
+    """Обновляет позиции всех пришельцев во флоте."""
+    check_fleet_edges(ai_settings, aliens)
     aliens.update()
+    # Проверка коллизий "пришелец-корабль".
+    # if pygame.sprite.spritecollideany(ship, aliens):
+    #     print("Ship hit!!!")

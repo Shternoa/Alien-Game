@@ -1,6 +1,5 @@
 import pygame
 from pygame.sprite import Sprite
-import random
 
 
 class Bullet(Sprite):

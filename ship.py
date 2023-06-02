@@ -32,7 +32,6 @@ class Ship():
         if self.moving_down and self.rect.bottom < self.screen_rect.bottom:
             self.rect.y += self.al_inv_settings.ship_speed
 
-
     def shipdraw(self):
         """Рисует корабль"""
         self.screen.blit(self.image, self.rect)
