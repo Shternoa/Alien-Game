@@ -24,14 +24,15 @@ def run_game():
     while True:
         # Отслеживание клавиатуры и мышки
         game_func.check_events(al_inv_settings, screen, ship, bullets)
-        ship.update()
-        bullets.update()
-        ship.shipdraw()
-        game_func.update_bullets(al_inv_settings, screen, ship, aliens, bullets)
-        game_func.update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets)
-        game_func.update_screen(al_inv_settings, screen, ship, aliens, bullets)
-        # Отображение последнего прорисованного экрана.
-        pygame.display.flip()
+        if stats.game_active:
+            ship.update()
+            bullets.update()
+            ship.shipdraw()
+            game_func.update_bullets(al_inv_settings, screen, ship, aliens, bullets)
+            game_func.update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets)
+            game_func.update_screen(al_inv_settings, screen, ship, aliens, bullets)
+            # Отображение последнего прорисованного экрана.
+            pygame.display.flip()
 
 
 run_game()

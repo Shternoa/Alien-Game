@@ -138,26 +138,36 @@ def change_fleet_direction(al_inv_settings, aliens):
     al_inv_settings.fleet_direction *= -1
 
 
-def ship_hit(ai_settings, stats, screen, ship, aliens, bullets):
+def ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets):
     """Столкновение с короблем"""
-    stats.ship_left -= 1
+    if stats.ship_left > 0:
+        stats.ship_left -= 1
 
-    # Очистка пришельцев с пулями
-    aliens.empty()
-    bullets.empty()
+        # Очистка пришельцев с пулями
+        aliens.empty()
+        bullets.empty()
 
-    # Новый флот
-    create_fleet(ai_settings, screen, ship, aliens)
-    ship.center_ship()
+        # Новый флот
+        create_fleet(al_inv_settings, screen, ship, aliens)
+        ship.center_ship()
 
-    # Задержка
-    sleep(0.5)
+        # Задержка
+        sleep(0.5)
+    else:
+        stats.game_active = False
+        sys.exit()
+
+
 
 
 def update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets):
     """Обновляет позиции всех пришельцев во флоте."""
     check_fleet_edges(al_inv_settings, aliens)
     aliens.update()
+    screen_rect = screen.get_rect()
+    for alien in aliens.sprites():
+        if alien.rect.bottom >= screen_rect.bottom:
+            ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
     # Проверка коллизий "пришелец-корабль".
-    if pygame.sprite.spritecollideany(ship, aliens):
-        ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
+        elif pygame.sprite.spritecollideany(ship, aliens):
+            ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
