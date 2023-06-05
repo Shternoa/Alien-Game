@@ -25,7 +25,7 @@ def run_game():
     # Запуск основного цикла игры
     while True:
         # Отслеживание клавиатуры и мышки
-        game_func.check_events(al_inv_settings, screen, stats, play_button, ship, bullets, )
+        game_func.check_events(al_inv_settings, screen, stats, play_button, ship, aliens, bullets)
         if stats.game_active:
             ship.update()
             bullets.update()
