@@ -57,7 +57,9 @@ def check_events(al_inv_settings, screen, stats, play_button, ship, aliens, bull
 
 def check_play_button(al_inv_setting, screen, stats, play_button, ship, aliens, bullets, mouse_1, mouse_2):
     """Запуск новой игры при нажатии"""
-    if play_button.rect.collidepoint(mouse_1, mouse_2):
+    button_click = play_button.rect.collidepoint(mouse_1, mouse_2)
+    if button_click and not stats.game_active:
+        pygame.mouse.set_visible(False)
         # Сброс игровой статистики
         stats.reset_stats()
         stats.game_active = True
@@ -175,6 +177,7 @@ def ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets):
         sleep(0.5)
     else:
         stats.game_active = False
+        pygame.mouse.set_visible(True)
         # sys.exit()
 
 
