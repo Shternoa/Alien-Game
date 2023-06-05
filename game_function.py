@@ -10,7 +10,10 @@ from time import sleep
 def check_keydown_events(event, al_inv_settings, screen, stats, ship, aliens, bullets):
     """Реагированиеи нажатия клавиш"""
     if event.key == pygame.K_p:
-        start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
+        if pygame.K_p and not stats.game_active:
+            al_inv_settings.scale_settings()
+            pygame.mouse.set_visible(False)
+            start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
     elif event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
@@ -61,6 +64,7 @@ def check_play_button(al_inv_settings, screen, stats, play_button, ship, aliens,
     """Запуск новой игры при нажатии"""
     button_click = play_button.rect.collidepoint(mouse_1, mouse_2)
     if button_click and not stats.game_active:
+        al_inv_settings.scale_settings()
         pygame.mouse.set_visible(False)
         # Сброс игровой статистики
         start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
@@ -109,6 +113,7 @@ def check_bullet_alien_collisions(al_inv_setting, screen, ship, aliens, bullets)
     if len(aliens) == 0:
         # Уничтожение существующих пуль и создание нового флота.
         bullets.empty()
+        al_inv_setting.increase_speed()
         create_fleet(al_inv_setting, screen, ship, aliens)
 
 
