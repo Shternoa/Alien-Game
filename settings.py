@@ -17,6 +17,7 @@ class Settings():
 
         # Настройки пришельцев
         self.speed_scale = 1.2
+        self.score_scale = 1.5
         self.scale_settings()
 
     def scale_settings(self):
@@ -24,9 +25,10 @@ class Settings():
         self.alien_speed = 1
         self.fleet_direction = 1
         self.fleet_drop_speed = 10
-        self.alien_points = 50
+        self.alien_points = 10
 
     def increase_speed(self):
         self.ship_speed *= self.speed_scale
         self.alien_speed *= self.speed_scale
         self.fleet_direction *= self.speed_scale
+        self.alien_points = int(self.alien_points * self.score_scale)
