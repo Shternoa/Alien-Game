@@ -4,7 +4,7 @@ class Game_Stats():
         """ Статистика """
         self.al_inv_settings = al_inv_settings
         self.reset_stats()
-        self.game_active = True
+        self.game_active = False
 
     def reset_stats(self):
         """Изменение статистики в течении игры"""

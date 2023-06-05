@@ -5,6 +5,7 @@ from ship import Ship
 import game_function as game_func
 from pygame.sprite import Group
 from game_stats import Game_Stats
+from button import Button
 
 
 def run_game():
@@ -19,20 +20,21 @@ def run_game():
     stats = Game_Stats(al_inv_settings)
 
     pygame.display.set_caption('Alien Invasion')
+    play_button = Button(al_inv_settings, screen, 'Play')
 
     # Запуск основного цикла игры
     while True:
         # Отслеживание клавиатуры и мышки
-        game_func.check_events(al_inv_settings, screen, ship, bullets)
+        game_func.check_events(al_inv_settings, screen, stats, play_button, ship, bullets, )
         if stats.game_active:
             ship.update()
             bullets.update()
             ship.shipdraw()
             game_func.update_bullets(al_inv_settings, screen, ship, aliens, bullets)
             game_func.update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets)
-            game_func.update_screen(al_inv_settings, screen, ship, aliens, bullets)
-            # Отображение последнего прорисованного экрана.
-            pygame.display.flip()
+        game_func.update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_button)
+        # Отображение последнего прорисованного экрана.
+        pygame.display.flip()
 
 
 run_game()

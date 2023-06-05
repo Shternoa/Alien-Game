@@ -41,18 +41,27 @@ def check_keyup_events(event, ship):
         ship.moving_down = False
 
 
-def check_events(al_inv_settings, screen, ship, bullets):
+def check_events(al_inv_settings, screen, stats, play_button, ship, bullets, ):
     # Отслеживание клавиатуры и мышки
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_1, mouse_2 = pygame.mouse.get_pos()
+            check_play_button(stats, play_button, mouse_1, mouse_2)
         elif event.type == pygame.KEYDOWN:
             check_keydown_events(event, al_inv_settings, screen, ship, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
 
-def update_screen(al_inv_settings, screen, ship, aliens, bullets):
+def check_play_button(stats, play_button, mouse_1, mouse_2):
+    """Запуск новой игры при нажатии"""
+    if play_button.rect.collidepoint(mouse_1, mouse_2):
+        stats.game_active = True
+
+
+def update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_button):
     """Обновление изображения и его отображение"""
     # Перерисовываем экран в другой цвет
     screen.fill(al_inv_settings.bg_color)
@@ -60,6 +69,9 @@ def update_screen(al_inv_settings, screen, ship, aliens, bullets):
         bullet.draw_a_bullet()
     ship.shipdraw()
     aliens.draw(screen)
+    # Если игра активна, то кнопка не появится
+    if not stats.game_active:
+        play_button.draw_button()
     # Показывает последний прорисованный экран
     pygame.display.flip()
 
@@ -155,9 +167,7 @@ def ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets):
         sleep(0.5)
     else:
         stats.game_active = False
-        sys.exit()
-
-
+        #sys.exit()
 
 
 def update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets):
@@ -168,6 +178,6 @@ def update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets):
     for alien in aliens.sprites():
         if alien.rect.bottom >= screen_rect.bottom:
             ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
-    # Проверка коллизий "пришелец-корабль".
+        # Проверка коллизий "пришелец-корабль".
         elif pygame.sprite.spritecollideany(ship, aliens):
             ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
