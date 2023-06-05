@@ -9,3 +9,4 @@ class Game_Stats():
     def reset_stats(self):
         """Изменение статистики в течении игры"""
         self.ship_left = self.al_inv_settings.ship_limit
+        self.score = 0

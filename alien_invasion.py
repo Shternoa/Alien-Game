@@ -6,6 +6,7 @@ import game_function as game_func
 from pygame.sprite import Group
 from game_stats import Game_Stats
 from button import Button
+from scoreboard import Scoreboard
 
 
 def run_game():
@@ -18,6 +19,7 @@ def run_game():
     aliens = Group()
     game_func.create_fleet(al_inv_settings, screen, ship, aliens)
     stats = Game_Stats(al_inv_settings)
+    scoreboard = Scoreboard(al_inv_settings, screen, stats)
 
     pygame.display.set_caption('Alien Invasion')
     play_button = Button(al_inv_settings, screen, 'Play')
@@ -30,9 +32,9 @@ def run_game():
             ship.update()
             bullets.update()
             ship.shipdraw()
-            game_func.update_bullets(al_inv_settings, screen, ship, aliens, bullets)
+            game_func.update_bullets(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets)
             game_func.update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets)
-        game_func.update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_button)
+        game_func.update_screen(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets, play_button)
         # Отображение последнего прорисованного экрана.
         pygame.display.flip()
 

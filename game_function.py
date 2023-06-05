@@ -81,7 +81,7 @@ def start_game(al_inv_settings, screen, stats, ship, aliens, bullets):
     ship.center_ship()
 
 
-def update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_button):
+def update_screen(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets, play_button):
     """Обновление изображения и его отображение"""
     # Перерисовываем экран в другой цвет
     screen.fill(al_inv_settings.bg_color)
@@ -89,6 +89,7 @@ def update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_bu
         bullet.draw_a_bullet()
     ship.shipdraw()
     aliens.draw(screen)
+    scoreboard.show_score()
     # Если игра активна, то кнопка не появится
     if not stats.game_active:
         play_button.draw_button()
@@ -96,21 +97,24 @@ def update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_bu
     pygame.display.flip()
 
 
-def update_bullets(al_inv_setting, screen, ship, aliens, bullets):
+def update_bullets(al_inv_setting, screen, stats, scoreboard, ship, aliens, bullets):
     bullets.update()
     # Удаление пуль, вышедших за край экрана.
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0:
             bullets.remove(bullet)
-    check_bullet_alien_collisions(al_inv_setting, screen, ship, aliens, bullets)
+    check_bullet_alien_collisions(al_inv_setting, screen, stats, scoreboard, ship, aliens, bullets)
 
 
-def check_bullet_alien_collisions(al_inv_setting, screen, ship, aliens, bullets):
+def check_bullet_alien_collisions(al_inv_setting, screen, stats, scoreboard, ship, aliens, bullets):
     """Обработка коллизий пуль с пришельцами."""
     # Удаление пуль и пришельцев, участвующих в коллизиях.
 
     collisions = pygame.sprite.groupcollide(bullets, aliens, False, True)
     if len(aliens) == 0:
+        if collisions:
+            stats.score += al_inv_setting.alien_points
+        scoreboard.prepare_score()
         # Уничтожение существующих пуль и создание нового флота.
         bullets.empty()
         al_inv_setting.increase_speed()
