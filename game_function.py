@@ -7,9 +7,11 @@ from alien import Alien
 from time import sleep
 
 
-def check_keydown_events(event, al_inv_settings, screen, ship, bullets):
+def check_keydown_events(event, al_inv_settings, screen, stats, ship, aliens, bullets):
     """Реагированиеи нажатия клавиш"""
-    if event.key == pygame.K_RIGHT:
+    if event.key == pygame.K_p:
+        start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
+    elif event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
         ship.moving_left = True
@@ -50,25 +52,29 @@ def check_events(al_inv_settings, screen, stats, play_button, ship, aliens, bull
             mouse_1, mouse_2 = pygame.mouse.get_pos()
             check_play_button(al_inv_settings, screen, stats, play_button, ship, aliens, bullets, mouse_1, mouse_2)
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, al_inv_settings, screen, ship, bullets)
+            check_keydown_events(event, al_inv_settings, screen, stats, ship, aliens, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
 
-def check_play_button(al_inv_setting, screen, stats, play_button, ship, aliens, bullets, mouse_1, mouse_2):
+def check_play_button(al_inv_settings, screen, stats, play_button, ship, aliens, bullets, mouse_1, mouse_2):
     """Запуск новой игры при нажатии"""
     button_click = play_button.rect.collidepoint(mouse_1, mouse_2)
     if button_click and not stats.game_active:
         pygame.mouse.set_visible(False)
         # Сброс игровой статистики
-        stats.reset_stats()
-        stats.game_active = True
+        start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
 
-        aliens.empty()
-        bullets.empty()
 
-        create_fleet(al_inv_setting, screen, ship, aliens)
-        ship.center_ship()
+def start_game(al_inv_settings, screen, stats, ship, aliens, bullets):
+    stats.reset_stats()
+    stats.game_active = True
+
+    aliens.empty()
+    bullets.empty()
+
+    create_fleet(al_inv_settings, screen, ship, aliens)
+    ship.center_ship()
 
 
 def update_screen(al_inv_settings, screen, stats, ship, aliens, bullets, play_button):
