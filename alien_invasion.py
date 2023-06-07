@@ -33,7 +33,7 @@ def run_game():
             bullets.update()
             ship.shipdraw()
             game_func.update_bullets(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets)
-            game_func.update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets)
+            game_func.update_aliens(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets)
         game_func.update_screen(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets, play_button)
         # Отображение последнего прорисованного экрана.
         pygame.display.flip()

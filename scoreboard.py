@@ -1,5 +1,8 @@
 import pygame
 
+from pygame.sprite import Group
+from ship import Ship
+
 
 class Scoreboard():
     """Вывод цифровой инфы"""
@@ -17,6 +20,7 @@ class Scoreboard():
         self.prepare_score()
         self.prepare_high_score()
         self.prepare_level()
+        self.prepare_ships()
 
     def prepare_score(self):
         score_str = str(self.stats.score)
@@ -46,7 +50,17 @@ class Scoreboard():
         self.level_rect.left = self.screen_rect.left
         self.level_rect.top = self.screen_rect.top
 
+    def prepare_ships(self):
+        """Количество оставшихся кораблей в изображениях"""
+        self.ships = Group()
+        for ship_number in range(self.stats.ship_left):
+            ship = Ship(self.al_inv_settings, self.screen)
+            ship.rect.x = 10 + ship_number * ship.rect.width
+            ship.rect.y = 10
+            self.ships.add(ship)
+
     def show_score(self):
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
-        self.screen.blit(self.level_image,self.level_rect)
+        self.screen.blit(self.level_image, self.level_rect)
+        self.ships.draw(self.screen)
