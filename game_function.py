@@ -115,6 +115,7 @@ def check_bullet_alien_collisions(al_inv_setting, screen, stats, scoreboard, shi
         for aliens in collisions.values():
             stats.score += al_inv_setting.alien_points * len(aliens)
         scoreboard.prepare_score()
+        check_high_score(stats,scoreboard)
 
     # Уничтожение существующих пуль и создание нового флота.
     if len(aliens) == 0:
@@ -209,3 +210,10 @@ def update_aliens(al_inv_settings, stats, screen, ship, aliens, bullets):
         # Проверка коллизий "пришелец-корабль".
         elif pygame.sprite.spritecollideany(ship, aliens):
             ship_hit(al_inv_settings, stats, screen, ship, aliens, bullets)
+
+
+def check_high_score(stats, scoreboard):
+    """Проверка на появлеине рекорда"""
+    if stats.score > stats.high_score:
+        stats.high_score = stats.score
+        scoreboard.prepare_high_score()
