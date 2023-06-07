@@ -128,6 +128,7 @@ def check_bullet_alien_collisions(al_inv_setting, screen, stats, scoreboard, shi
     if len(aliens) == 0:
         bullets.empty()
         al_inv_setting.increase_speed()
+        stats.save_high_score()
 
         # Увеличение уровня
         stats.level += 1
