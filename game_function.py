@@ -7,13 +7,13 @@ from alien import Alien
 from time import sleep
 
 
-def check_keydown_events(event, al_inv_settings, screen, stats, ship, aliens, bullets):
+def check_keydown_events(event, al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets):
     """Реагированиеи нажатия клавиш"""
     if event.key == pygame.K_p:
         if pygame.K_p and not stats.game_active:
             al_inv_settings.scale_settings()
             pygame.mouse.set_visible(False)
-            start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
+            start_game(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets)
     elif event.key == pygame.K_RIGHT:
         ship.moving_right = True
     elif event.key == pygame.K_LEFT:
@@ -46,33 +46,39 @@ def check_keyup_events(event, ship):
         ship.moving_down = False
 
 
-def check_events(al_inv_settings, screen, stats, play_button, ship, aliens, bullets):
+def check_events(al_inv_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets):
     # Отслеживание клавиатуры и мышки
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             sys.exit()
         elif event.type == pygame.MOUSEBUTTONDOWN:
             mouse_1, mouse_2 = pygame.mouse.get_pos()
-            check_play_button(al_inv_settings, screen, stats, play_button, ship, aliens, bullets, mouse_1, mouse_2)
+            check_play_button(al_inv_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets, mouse_1,
+                              mouse_2)
         elif event.type == pygame.KEYDOWN:
-            check_keydown_events(event, al_inv_settings, screen, stats, ship, aliens, bullets)
+            check_keydown_events(event, al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets)
         elif event.type == pygame.KEYUP:
             check_keyup_events(event, ship)
 
 
-def check_play_button(al_inv_settings, screen, stats, play_button, ship, aliens, bullets, mouse_1, mouse_2):
+def check_play_button(al_inv_settings, screen, stats, scoreboard, play_button, ship, aliens, bullets, mouse_1, mouse_2):
     """Запуск новой игры при нажатии"""
     button_click = play_button.rect.collidepoint(mouse_1, mouse_2)
     if button_click and not stats.game_active:
         al_inv_settings.scale_settings()
         pygame.mouse.set_visible(False)
         # Сброс игровой статистики
-        start_game(al_inv_settings, screen, stats, ship, aliens, bullets)
+        start_game(al_inv_settings, screen, stats, scoreboard, ship, aliens, bullets)
 
 
-def start_game(al_inv_settings, screen, stats, ship, aliens, bullets):
+def start_game(al_inv_settings, screen, stats, scoreboad, ship, aliens, bullets):
     stats.reset_stats()
     stats.game_active = True
+
+    # Сброс изображения счетов и уровня
+    scoreboad.prepare_score()
+    scoreboad.prepare_high_score()
+    scoreboad.prepare_level()
 
     aliens.empty()
     bullets.empty()
@@ -115,12 +121,16 @@ def check_bullet_alien_collisions(al_inv_setting, screen, stats, scoreboard, shi
         for aliens in collisions.values():
             stats.score += al_inv_setting.alien_points * len(aliens)
         scoreboard.prepare_score()
-        check_high_score(stats,scoreboard)
+        check_high_score(stats, scoreboard)
 
     # Уничтожение существующих пуль и создание нового флота.
     if len(aliens) == 0:
         bullets.empty()
         al_inv_setting.increase_speed()
+
+        # Увеличение уровня
+        stats.level += 1
+        scoreboard.prepare_level()
         create_fleet(al_inv_setting, screen, ship, aliens)
 
 
